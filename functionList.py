@@ -2,6 +2,8 @@
 #### make sure the files are in the same directory
 
 import numpy as np
+import torch
+
 
 #l is length of the matrix and it's optional
 def findMSE(prediction,actual,l=0):
@@ -28,8 +30,34 @@ def buildFeatureMat(X,numMemoryPoints):
         memMat = np.hstack((memMat,hold))
     return memMat
 
+## this is only for solving the closed form when the parameters are the columns and rows are the number of data points
+## output is going to be a tensor. np -> tensor use torch.from_numpy
+## tensor -> np array use tensor method: tensorMatrix.numpy()
+
+###### if l = 0 we can happen accross non-invertale matricies
+def solveRrClosedForm(X,Y,l=.1):
+    Y = torch.from_numpy(Y)
+    X = torch.from_numpy(X)
+    X = X.to('cuda')#this is a propert to set in torch to make calc run on GPU
+    Y = Y.to('cuda')
+    Xt = torch.transpose(X,0,1) #precalculate all the weird torch stuff to avoid errors
+
+    eyeSize = X.shape[1]
+    out = torch.matmul(Xt,X) #matmul for 2d matricies are the same as inner product mat multiplication
+    out = out + (torch.eye(eyeSize)*l).to('cuda')
+    out = out.inverse()
+    out = torch.matmul(out,Xt)
+    out = torch.matmul(out,Y)
+    return out
+
+
+
 ########### With these two functions you should be able to solve RR with:
 """
+import functionList
+from sklearn.linear_model import Ridge
+import sklearn
+
 memMat = functionList.buildFeatureMat(X,numMemoryPoints) # build reature vector
 ols = Ridge(alpha=0) ###
 ols.fit(memMat,X) ### replace these three line with however you want to solve RR
