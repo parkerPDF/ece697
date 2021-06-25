@@ -50,7 +50,27 @@ def solveRrClosedForm(X,Y,l=.1):
     out = torch.matmul(out,Y)
     return out
 
+def removeTrash(x, mask, memNumber):
+    maskPass = 1
+    indexTracking = 0
+    x_hold = np.zeros(x.shape) ## do this with X and with featureMat I think
+    for i in range(x.shape[0]):
+        maskPass = 1
+        if mask[i] == 0:
+            maskPass = 0
+        else:
+            for p in range(1,memNumber+1):
+                if i-p < 0:
+                    maskPass = 1
+                else:
+                    if mask[i-p] == 0:
+                        maskPass = 0
+        if maskPass == 1:
+            x_hold[indexTracking] = x[i,:]
+            indexTracking = indexTracking + 1
 
+    out = x_hold[0:indexTracking,:]
+    return out
 
 ########### With these two functions you should be able to solve RR with:
 """
