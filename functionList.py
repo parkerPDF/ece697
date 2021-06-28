@@ -50,6 +50,14 @@ def solveRrClosedForm(X,Y,l=.1):
     out = torch.matmul(out,Y)
     return out
 
+def predClosedForm(A,w):
+    A = torch.from_numpy(A)
+    A = A.to('cuda')
+    out = torch.matmul(A,w)
+    out = out.cpu().detach().numpy()
+    return out
+
+
 def removeTrash(x, mask, memNumber):
     maskPass = 1
     indexTracking = 0
