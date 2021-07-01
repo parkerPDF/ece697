@@ -3,6 +3,7 @@
 
 import numpy as np
 import torch
+import sklearn
 
 
 #l is length of the matrix and it's optional
@@ -79,6 +80,18 @@ def removeTrash(x, mask, memNumber):
 
     out = x_hold[0:indexTracking,:]
     return out
+
+#easy way to get the predicted output, can add extra cases as we need.
+def predRrOutput(Atrain, Atest, Ytrain, regularizer, useClosedForm=0):
+    if useClosedForm == 0:
+        RR = sklearn.linear_model.Ridge(alpha=regularizer)
+        RR.fit(Atrain,Ytrain)
+        pred = RR.predict(Atest)
+    else:
+        w = solveRrClosedForm(Atrain,Ytrain,regularizer)
+        pred = predClosedForm(Atest,w)
+    return pred
+
 
 ########### With these two functions you should be able to solve RR with:
 """
