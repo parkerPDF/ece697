@@ -1,0 +1,25 @@
+# trial-chtc.sub
+universe = vanilla
+log = trial-chtc_$(Cluster).log
+
+executable = trial-chtc.sh
+
+arguments = 282L.mat 4 1 0
+
+output = p4r1cv0.out
+
+error = error.err
+
+
+# figureout what to do with function list
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = 282L.mat, http://proxy.chtc.wisc.edu/SQUID/chtc/python38.tar.gz, packages.tar.gz, HtcFirstRunCvParallel.py, functionList.py
+
+
+
+request_cpus = 1
+request_memory = 1GB
+request_disk = 1MB
+
+queue 1

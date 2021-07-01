@@ -1,4 +1,6 @@
 import sys
+import sklearn.linear_model
+import sklearn.model_selection
 import sklearn
 import numpy as np
 from scipy.io import loadmat
@@ -10,12 +12,16 @@ whatCv = (sys.argv[3])
 fileName = (sys.argv[4])
 cvNum = 10
 
+memNumber = int(memNumber)
+ridgeNumber = float(ridgeNumber)
+whatCv = int(whatCv)
+
 raw = loadmat(fileName)
 X = raw['data']  
 mask = raw['mask']
 l = X.shape[0]
 
-ridgeNormal = np.dot(ridgeNumber,l)
+ridgeNormal = ridgeNumber*l
 
 featureMat = functionList.buildFeatureMat(X,memNumber)
 xClean = functionList.removeTrash(X,mask,memNumber)
