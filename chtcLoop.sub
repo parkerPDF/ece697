@@ -1,0 +1,25 @@
+# trial-chtc.sub
+universe = vanilla
+log = L$(name)p$(mem)r$(ridge)c$(cv).log
+
+executable = chtcPythonShell.sh
+
+arguments = $(name) $(mem) $(ridge) $(cv)
+
+output = $(name)p$(mem)r$(ridge)c$(cv).out
+
+error = error$(name)p$(mem)r$(ridge)c$(cv).err
+
+
+# figureout what to do with function list
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = $(name).mat, http://proxy.chtc.wisc.edu/SQUID/chtc/python38.tar.gz, packages.tar.gz, HtcFirstRunCvParallel.py, functionList.py
+
+
+
+request_cpus = 1
+request_memory = 3GB
+request_disk = 20MB
+
+queue name, mem, ridge, cv from chtcRunList.txt
