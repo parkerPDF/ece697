@@ -9,6 +9,7 @@ import sklearn.linear_model
 
 
 #l is length of the matrix and it's optional
+#finds the mean square error between two sets
 def findMSE(prediction,actual,l=0):
     if l == 0:
         l = len(actual)
@@ -36,7 +37,6 @@ def buildFeatureMat(X,numMemoryPoints):
 ## this is only for solving the closed form when the parameters are the columns and rows are the number of data points
 ## output is going to be a tensor. np -> tensor use torch.from_numpy
 ## tensor -> np array use tensor method: tensorMatrix.numpy()
-
 ###### if l = 0 we can happen accross non-invertale matricies
 def solveRrClosedForm(X,Y,l=.1):
     Y = torch.from_numpy(Y)
@@ -53,32 +53,32 @@ def solveRrClosedForm(X,Y,l=.1):
     out = torch.matmul(out,Y)
     return out
 
-def predClosedForm(A,w):
+def predClosedForm(A,w): #handels the cuda properties to do the wX multiplication
     A = torch.from_numpy(A)
     A = A.to('cuda')
     out = torch.matmul(A,w)
     out = out.cpu().detach().numpy()
     return out
 
-
+#with an X matrix and a mask vector that identifies which data points are usable and which ones are not.
 def removeTrash(x, mask, memNumber):
     maskPass = 1
     indexTracking = 0
-    x_hold = np.zeros(x.shape) ## do this with X and with featureMat I think
+    x_hold = np.zeros(x.shape) 
     for i in range(x.shape[0]):
         maskPass = 1
-        if mask[i] == 0:
+        if mask[i] == 0: #if this point is bad don't use it
             maskPass = 0
         else:
-            for p in range(1,memNumber+1):
-                if i-p < 0:
+            for p in range(1,memNumber+1): #check all of the data points that we are going to use for the feature
+                if i-p < 0: #if there are no past time points we can use this point
                     maskPass = 1
-                else:
+                else: #if any of the points in range are bad don't use it.
                     if mask[i-p] == 0:
                         maskPass = 0
         if maskPass == 1:
             x_hold[indexTracking] = x[i,:]
-            indexTracking = indexTracking + 1
+            indexTracking = indexTracking + 1 #keep track of how long the file actually is.
 
     out = x_hold[0:indexTracking,:]
     return out
@@ -93,18 +93,3 @@ def predRrOutput(Atrain, Atest, Ytrain, regularizer, useClosedForm=0):
         w = solveRrClosedForm(Atrain,Ytrain,regularizer)
         pred = predClosedForm(Atest,w)
     return pred
-
-
-########### With these two functions you should be able to solve RR with:
-"""
-import functionList
-from sklearn.linear_model import Ridge
-import sklearn
-
-memMat = functionList.buildFeatureMat(X,numMemoryPoints) # build reature vector
-ols = Ridge(alpha=0) ###
-ols.fit(memMat,X) ### replace these three line with however you want to solve RR
-pred = ols.predict(memMat)###
-functionList.findMSE(pred,X) # get MSE
-"""
-
