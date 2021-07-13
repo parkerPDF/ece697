@@ -6,7 +6,7 @@ executable = chtcPythonShell.sh
 
 arguments = $(name) $(mem) $(ridge) $(cv)
 
-output = home/groups/ece697_mp/$(name)p$(mem)r$(ridge)c$(cv).out
+output = $(name)p$(mem)r$(ridge)c$(cv).out
 
 error = error$(name)p$(mem)r$(ridge)c$(cv).err
 
@@ -20,6 +20,6 @@ transfer_input_files = $(name).mat, http://proxy.chtc.wisc.edu/SQUID/chtc/python
 
 request_cpus = 1
 request_memory = 3GB
-request_disk = 3.5MB
+request_disk = 20MB
 
 queue name, mem, ridge, cv from chtcRunList.txt
