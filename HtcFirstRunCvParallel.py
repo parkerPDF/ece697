@@ -12,22 +12,22 @@ whatCv = (sys.argv[3])
 fileName = (sys.argv[4])
 cvNum = 10
 
-memNumber = int(memNumber)
+memNumber = int(memNumber) #convert Data types
 ridgeNumber = float(ridgeNumber)
 whatCv = int(whatCv)
 
-raw = loadmat(fileName)
+raw = loadmat(fileName) #Get the Data
 X = raw['data']  
 mask = raw['mask']
 l = X.shape[0]
 
 ridgeNormal = ridgeNumber*l
 
-featureMat = functionList.buildFeatureMat(X,memNumber)
+featureMat = functionList.buildFeatureMat(X,memNumber) #USING functionList from repo
 xClean = functionList.removeTrash(X,mask,memNumber)
 featureMat = functionList.removeTrash(featureMat,mask,memNumber)
 
-crossVal = sklearn.model_selection.KFold(n_splits=cvNum)
+crossVal = sklearn.model_selection.KFold(n_splits=cvNum) #CrossValidation
 folds = [next(crossVal.split(featureMat)) for i in range(cvNum)]
 train_in = folds[whatCv][0]
 test_in = folds[whatCv][1]
