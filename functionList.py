@@ -9,10 +9,13 @@ import sklearn.linear_model
 
 
 #l is length of the matrix and it's optional
-def findMSE(prediction,actual,l=0):
+def findMSE(prediction,actual,l=0,forChannels=0):
     if l == 0:
         l = len(actual)
-    c = actual.shape[1]
+    if forChannels == 1:
+        c = 1
+    else:
+        c = actual.shape[1]
     squareError = np.linalg.norm(prediction-actual)
     mse = squareError/l/c
     return mse

@@ -35,7 +35,7 @@ errOut = ""
 for thisChannel in range(c):
     ridgeNormal = ridgeNumber*np.linalg.norm(xClean[:,thisChannel])
     pred = functionList.predRrOutput(featureMat[train_in, :], featureMat[test_in, :], xClean[train_in, thisChannel], ridgeNormal, 0)
-    error = functionList.findMSE(pred, xClean[test_in, thisChannel])
+    error = functionList.findMSE(pred, xClean[test_in, thisChannel],0,1)
     errOut = errOut + str(error) + ","
 
 print(errOut)
