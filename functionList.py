@@ -12,8 +12,9 @@ import sklearn.linear_model
 def findMSE(prediction,actual,l=0):
     if l == 0:
         l = len(actual)
+    c = actual.shape[1]
     squareError = np.linalg.norm(prediction-actual)
-    mse = squareError/l
+    mse = squareError/l/c
     return mse
 
 #build the feauture vector make sure X is such that each column is one channel and each row is a different time point
