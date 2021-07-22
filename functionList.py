@@ -97,18 +97,3 @@ def predRrOutput(Atrain, Atest, Ytrain, regularizer, useClosedForm=0):
         w = solveRrClosedForm(Atrain,Ytrain,regularizer)
         pred = predClosedForm(Atest,w)
     return pred
-
-
-########### With these two functions you should be able to solve RR with:
-"""
-import functionList
-from sklearn.linear_model import Ridge
-import sklearn
-
-memMat = functionList.buildFeatureMat(X,numMemoryPoints) # build reature vector
-ols = Ridge(alpha=0) ###
-ols.fit(memMat,X) ### replace these three line with however you want to solve RR
-pred = ols.predict(memMat)###
-functionList.findMSE(pred,X) # get MSE
-"""
-
