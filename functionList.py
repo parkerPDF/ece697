@@ -9,12 +9,14 @@ import sklearn.linear_model
 
 
 #l is length of the matrix and it's optional
-def findMSE(prediction,actual,l=0,forChannels=0):
+def findMSE(prediction, actual, l=0, forChannels=0):
+    assert isinstance(prediction, np.ndarray), "Please use a numpy array for prediction values"
+    assert isinstance(actual, np.ndarray), "Please use a numpy array for acutal values"
     if l == 0:
         l = len(actual)
-    if forChannels == 1:
+    if actual.ndim == 1:
         c = 1
-    else:
+    elif actual.ndim == 2:
         c = actual.shape[1]
     squareError = np.linalg.norm(prediction-actual)
     mse = squareError/l/c
@@ -43,6 +45,12 @@ def buildFeatureMat(X,numMemoryPoints):
 
 ###### if l = 0 we can happen accross non-invertale matricies
 def solveRrClosedForm(X,Y,l=.1):
+    assert isinstance(X, np.ndarray), "Please use a numpy array for prediction values"
+    assert isinstance(Y, np.ndarray), "Please use a numpy array for acutal values"
+
+    assert X.shape[0] > X.shape[1], "Dont use solveRrClosedForm it wont be fast for X'X"
+
+
     Y = torch.from_numpy(Y)
     X = torch.from_numpy(X)
     X = X.to('cuda')#this is a propert to set in torch to make calc run on GPU
